@@ -1,0 +1,8 @@
+id,task,completed,due_date,completion_date,priority
+1,Complete the web page design,True,2023-05-01,2023-05-03,1
+2,Create login and signup pages,True,2023-05-03,2023-05-05,2
+3,Product management,False,2023-05-05,,3
+4,Cart and wishlist creation,False,2023-05-08,,4
+5,Payment gateway integration,False,2023-05-10,,5
+6,Order management,False,2023-05-10,,6
+7,Maria like chocolate,chocolate costs $5,Maria bought 23 chocolates,,6
