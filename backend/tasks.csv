@@ -5,4 +5,3 @@ id,task,completed,due_date,completion_date,priority
 4,Cart and wishlist creation,False,2023-05-08,,4
 5,Payment gateway integration,False,2023-05-10,,5
 6,Order management,False,2023-05-10,,6
-7,Maria like chocolate,chocolate costs $5,Maria bought 23 chocolates,,6

@@ -13,5 +13,9 @@ loader = CSVLoader(file_path=FILE_PATH)
 data = loader.load()
 vectorstore = Chroma.from_documents(data, EdenAiEmbeddings())
 qa = RetrievalQA.from_llm(llm, retriever=vectorstore.as_retriever())
-answer = qa.run("How much Maria spent on her chocolates?")
-print(answer)
+
+
+def get_answer_from_model_util(prompt: str):
+    # prompt = "How much Maria spent on her chocolates?"
+    answer = qa.run(prompt)
+    return answer

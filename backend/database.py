@@ -1,9 +1,14 @@
-from backend.config import SUPABASE_USER, SUPABASE_PASSWORD, SUPABASE_HOST, SUPABASE_PORT, SUPABASE_NAME, FILE_PATH, TABLE_NAME
+from backend.config import (
+    SUPABASE_USER, SUPABASE_PASSWORD,
+    SUPABASE_HOST, SUPABASE_PORT,
+    SUPABASE_NAME, FILE_PATH,
+    TABLE_NAME
+)
 import psycopg2
 import csv
 
 
-def export_data_to_csv():
+def export_data_to_csv_util():
     try:
         conn = psycopg2.connect(
             host=SUPABASE_HOST,
