@@ -5,6 +5,8 @@ const ShelfLifeProducts: React.FC = () => {
     const [firstSelectValue, setFirstSelectValue] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
     const [secondSelectOptions, setSecondSelectOptions] = useState<string[]>(['Комнатная температура']);
+    const [showRangeInput, setShowRangeInput] = useState(false);
+    const [chosenNumber, setChosenNumber] = useState(0);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/docs')
@@ -25,9 +27,15 @@ const ShelfLifeProducts: React.FC = () => {
 
         if (selectedValue === 'Условие') {
             setSecondSelectOptions(['Комнатная температура', 'Холодильник', 'Морозильник']);
-        } else {
-            setSecondSelectOptions(['Option 3', 'Option 4']);
+            setShowRangeInput(false);
+        } else if (selectedValue === 'Температура') {
+            setShowRangeInput(true);
         }
+    };
+
+    const handleRangeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const number = parseInt(event.target.value);
+        setChosenNumber(number);
     };
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -59,14 +67,33 @@ const ShelfLifeProducts: React.FC = () => {
                         <option>Температура</option>
                     </select>
 
-                    <select
-                        disabled={!firstSelectValue}
-                        className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        {secondSelectOptions.map((option, index) => (
-                            <option key={index}>{option}</option>
-                        ))}
-                    </select>
+                    {showRangeInput ? (
+                        <>
+                            <input
+                                type="range"
+                                min="-20"
+                                max="20"
+                                id="myRange"
+                                onChange={handleRangeInputChange}
+                                className="bg-gray-300 appearance-none h-1 thumb-blue-500"
+                            />
+                            <p>
+                                Выбранная температура: <span id="chosenNumber">{chosenNumber}</span>
+                            </p>
+                        </>
+                    ) : null}
+                    {firstSelectValue !== 'Температура' && (
+                        <select
+                            id="mySelect"
+                            disabled={!firstSelectValue}
+                            className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            onChange={handleFirstSelectChange}
+                        >
+                            {secondSelectOptions.map((option, index) => (
+                                <option key={index}>{option}</option>
+                            ))}
+                        </select>
+                    )}
 
                     <select
                         disabled={!firstSelectValue}
