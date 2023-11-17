@@ -4,16 +4,12 @@ const ShelfLifeProducts: React.FC = () => {
     const [text, setText] = useState('');
     const [firstSelectValue, setFirstSelectValue] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
-    const [secondSelectOptions, setSecondSelectOptions] = useState<string[]>(['Комнатная температура']);
+    const [secondSelectOptions, setSecondSelectOptions] = useState<string[]>(['Комнатная температура', 'Холодильник', 'Морозильник']);
     const [showRangeInput, setShowRangeInput] = useState(false);
     const [chosenNumber, setChosenNumber] = useState(0);
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/docs')
-            .then(response => response.text())
-            .then(data => setText(data))
-            .catch(error => console.log(error));
-    }, []);
+    const [conditionParam, setConditionParam] = useState('Комнатная температура');
+    const [vacuumParam, setVacuumParam] = useState(true);
+    const [fetchedData, setFetchedData] = useState('');
 
     const handleFirstSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value;
@@ -38,20 +34,73 @@ const ShelfLifeProducts: React.FC = () => {
         setChosenNumber(number);
     };
 
+    const handleConditionParamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedValue = event.target.value;
+        setConditionParam(selectedValue);
+    };
+
+    const handleVacuumChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedValue = event.target.value;
+        setVacuumParam(selectedValue === 'Хранение с вакуумом');
+    };
+
+    useEffect(() => {
+        setText(fetchedData);
+    }, [fetchedData]);
+
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        // Handle form submission here
+
+        const productNameInput = document.getElementById('productNameInput') as HTMLInputElement;
+        const productName = productNameInput?.value;
+
+        let payload: any = {
+            product: productName,
+            vacuum: vacuumParam,
+        };
+
+        if (firstSelectValue === 'Условие') {
+            payload.param = 'Условие';
+            payload.condition_param = conditionParam;
+        } else if (firstSelectValue === 'Температура') {
+            payload.param = 'Температура';
+            payload.temperature_param = chosenNumber;
+        }
+
+        fetch('http://127.0.0.1:5000/get_answer_from_model', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+            .then((response) => response.text())
+            .then((data) => {
+                console.log(payload);
+                setFetchedData(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     return (
         <div>
-            <div>
-                <input type="text" value={text} readOnly />
+            <div className="mt-4 flex justify-center items-center">
+                <div>
+                    <textarea
+                        value={text}
+                        readOnly
+                        className="px-2 py-1 border border-gray-300 rounded focus:outline-none w-96 h-20 resize-none"
+                        style={{ width: '1000px' }}
+                    />
+                </div>
             </div>
             <div className="mt-4 flex justify-center">
                 <form className="flex space-x-4 items-center" onSubmit={handleSubmit}>
                     <input
                         type="text"
+                        id="productNameInput"
                         placeholder="Название продукта"
                         className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -75,6 +124,7 @@ const ShelfLifeProducts: React.FC = () => {
                                 max="20"
                                 id="myRange"
                                 onChange={handleRangeInputChange}
+                                defaultValue="0"
                                 className="bg-gray-300 appearance-none h-1 thumb-blue-500"
                             />
                             <p>
@@ -87,7 +137,8 @@ const ShelfLifeProducts: React.FC = () => {
                             id="mySelect"
                             disabled={!firstSelectValue}
                             className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            onChange={handleFirstSelectChange}
+                            onChange={handleConditionParamChange}
+                            value={conditionParam}
                         >
                             {secondSelectOptions.map((option, index) => (
                                 <option key={index}>{option}</option>
@@ -96,8 +147,10 @@ const ShelfLifeProducts: React.FC = () => {
                     )}
 
                     <select
+                        id="vacuumSelect"
                         disabled={!firstSelectValue}
                         className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={handleVacuumChange}
                     >
                         <option>Хранение с вакуумом</option>
                         <option>Хранение без вакуума</option>
@@ -110,11 +163,11 @@ const ShelfLifeProducts: React.FC = () => {
                         ${(!firstSelectValue || isDisabled) && 'bg-gray-400 hover:bg-gray-400'
                             }`}
                     >
-                        Get Result
+                        Рассчитать
                     </button>
                 </form>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 };
 

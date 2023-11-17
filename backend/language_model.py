@@ -15,7 +15,15 @@ vectorstore = Chroma.from_documents(data, EdenAiEmbeddings())
 qa = RetrievalQA.from_llm(llm, retriever=vectorstore.as_retriever())
 
 
-def get_answer_from_model_util(prompt: str):
-    # prompt = "How much Maria spent on her chocolates?"
+def get_answer_from_model_util(product: str, param: str, vacuum: bool, condition_param: str = None,
+                               temperature_param: str = None):
+    if param == "Условие":
+        prompt = f"Через сколько испортится этот продукт? Назвние: {product}, место хранения: {condition_param}, наличие вакуума: {vacuum}"
+    else:
+        prompt = f"Через сколько испортится этот продукт? Назвние: {product}, температура хранения: {temperature_param}, наличие вакуума: {vacuum}"
+
     answer = qa.run(prompt)
-    return answer
+    return answer.strip()
+
+
+# print(get_answer_from_model_util(product="Блинчики", param="Условие", condition_param="Морозильник", vacuum=True))
