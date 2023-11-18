@@ -8,7 +8,7 @@ const ShelfLifeProducts: React.FC = () => {
     const [showRangeInput, setShowRangeInput] = useState(false);
     const [chosenNumber, setChosenNumber] = useState(0);
     const [conditionParam, setConditionParam] = useState('Комнатная температура');
-    const [vacuumParam, setVacuumParam] = useState(true);
+    const [vacuumParam, setVacuumParam] = useState(false);
     const [fetchedData, setFetchedData] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -158,8 +158,8 @@ const ShelfLifeProducts: React.FC = () => {
                         className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         onChange={handleVacuumChange}
                     >
-                        <option>Хранение с вакуумом</option>
                         <option>Хранение без вакуума</option>
+                        <option>Хранение с вакуумом</option>
                     </select>
 
                     <button
