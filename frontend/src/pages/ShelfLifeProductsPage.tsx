@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 const ShelfLifeProducts: React.FC = () => {
     const [text, setText] = useState('');
@@ -10,6 +10,7 @@ const ShelfLifeProducts: React.FC = () => {
     const [conditionParam, setConditionParam] = useState('Комнатная температура');
     const [vacuumParam, setVacuumParam] = useState(true);
     const [fetchedData, setFetchedData] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFirstSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value;
@@ -67,6 +68,8 @@ const ShelfLifeProducts: React.FC = () => {
             payload.temperature_param = chosenNumber;
         }
 
+        setIsLoading(true);
+
         fetch('http://127.0.0.1:5000/get_answer_from_model', {
             method: 'POST',
             headers: {
@@ -81,6 +84,9 @@ const ShelfLifeProducts: React.FC = () => {
             })
             .catch((error) => {
                 console.error(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     };
 
@@ -92,7 +98,7 @@ const ShelfLifeProducts: React.FC = () => {
                         value={text}
                         readOnly
                         className="px-2 py-1 border border-gray-300 rounded focus:outline-none w-96 h-20 resize-none"
-                        style={{ width: '1000px' }}
+                        style={{width: '1000px'}}
                     />
                 </div>
             </div>
@@ -159,11 +165,12 @@ const ShelfLifeProducts: React.FC = () => {
                     <button
                         type="submit"
                         disabled={!firstSelectValue || isDisabled}
+                        onClick={handleSubmit}
                         className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500
                         ${(!firstSelectValue || isDisabled) && 'bg-gray-400 hover:bg-gray-400'
-                            }`}
+                        }`}
                     >
-                        Рассчитать
+                        {isLoading ? 'Loading...' : 'Рассчитать'}
                     </button>
                 </form>
             </div>
