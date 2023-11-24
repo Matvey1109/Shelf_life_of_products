@@ -20,7 +20,7 @@ def get_answer_from_model_util(product: str, param: str, vacuum: bool, condition
     if param == "Условие":
         prompt = f"Через сколько испортится этот продукт? Назвние: {product}, место хранения: {condition_param}, наличие вакуума: {vacuum}"
     else:
-        prompt = f"Через сколько испортится этот продукт? Назвние: {product}, температура хранения: {temperature_param}, наличие вакуума: {vacuum}"
+        prompt = f"Через сколько испортится этот продукт? Назвние: {product}, температура места хранения: {temperature_param}, наличие вакуума: {vacuum}"
 
     answer = qa.run(prompt)
     return answer.strip()

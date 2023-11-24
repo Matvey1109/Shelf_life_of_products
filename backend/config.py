@@ -13,5 +13,5 @@ SUPABASE_HOST = os.getenv('SUPABASE_HOST')
 SUPABASE_PORT = os.getenv('SUPABASE_PORT')
 SUPABASE_NAME = os.getenv('SUPABASE_NAME')
 
-FILE_PATH = "/Users/mac/Desktop/FlaskShelfLife/Shelf_life_of_products/backend/products_condition_vacuum.csv"
-TABLE_NAME = "tasks"
+FILE_PATH = "/Users/mac/Desktop/FlaskShelfLife/Shelf_life_of_products/backend/products.csv"
+TABLE_NAME = "products"
