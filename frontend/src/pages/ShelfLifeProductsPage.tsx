@@ -11,6 +11,7 @@ const ShelfLifeProducts: React.FC = () => {
     const [vacuumParam, setVacuumParam] = useState(false);
     const [fetchedData, setFetchedData] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleFirstSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value;
@@ -54,6 +55,15 @@ const ShelfLifeProducts: React.FC = () => {
 
         const productNameInput = document.getElementById('productNameInput') as HTMLInputElement;
         const productName = productNameInput?.value;
+
+        if (!productName || productName.trim() === '') {
+            // Product name field is empty
+            const errorMessage = 'Please enter a product name!';
+            setErrorMessage(errorMessage);
+            return; // Prevent further execution of the form submission
+        }
+
+        setErrorMessage(''); // Clear any previous error message
 
         let payload: any = {
             product: productName,
@@ -104,6 +114,7 @@ const ShelfLifeProducts: React.FC = () => {
             </div>
             <div className="mt-4 flex justify-center">
                 <form className="flex space-x-4 items-center" onSubmit={handleSubmit}>
+                    {errorMessage && <div className="error-message">{errorMessage}</div>}
                     <input
                         type="text"
                         id="productNameInput"
